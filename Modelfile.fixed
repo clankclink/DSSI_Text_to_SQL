@@ -1,0 +1,32 @@
+FROM codellama:7b
+
+# Improved parameters to prevent token loops
+PARAMETER temperature 0.1
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+PARAMETER repeat_penalty 1.15
+PARAMETER num_predict 256
+PARAMETER stop "<|endoftext|>"
+PARAMETER stop "</s>"
+PARAMETER stop "<|end|>"
+PARAMETER stop "{ end }"
+PARAMETER stop "END"
+PARAMETER stop "```"
+
+# Simplified system prompt
+SYSTEM """You are a SQL query generator. Convert natural language to SQL queries.
+
+Rules:
+1. Generate only valid SQL code
+2. Use the provided database schema
+3. Be concise and accurate
+4. Stop after generating the query
+
+Format: Provide the SQL query in a code block, then briefly explain it."""
+
+# Simple template without complex tokens
+TEMPLATE """{{ .System }}
+
+{{ .Prompt }}
+
+SQL Query:"""
